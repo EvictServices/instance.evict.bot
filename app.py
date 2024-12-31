@@ -180,7 +180,7 @@ class InstanceManager:
                             BOT_PREFIX={prefix}
 
                             # Database
-                            DATABASE_DSN=postgres://admin:admin@localhost:5433/{bot_name}
+                            DATABASE_DSN=postgres://admin:0J9RLTUDWMRl3IrdAE3as8@localhost:5433/{bot_name}
 
                             # Instance Owner
                             INSTANCE_OWNER_ID={owner.get('id')}
