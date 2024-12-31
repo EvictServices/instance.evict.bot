@@ -229,12 +229,18 @@ class InstanceManager:
                     f"docker exec -i setup-postgres-1 psql -U admin -c 'CREATE DATABASE {bot_name};'"
                 )
 
+                # Add verification step
+                self.logger.info("Verifying database creation")
+                await self.run_command(
+                    f"docker exec -i setup-postgres-1 psql -U admin -c '\\l' | grep {bot_name}"
+                )
+
                 await asyncio.sleep(1)
 
                 self.logger.info("Applying database schema")
-                await self.run_command(
-                    f"docker exec -i setup-postgres-1 psql -U admin -d {bot_name} < /root/setup/schema_backup.sql"
-                )
+                schema_cmd = f"cat /root/setup/schema_backup.sql | docker exec -i setup-postgres-1 psql -U admin -d {bot_name}"
+                self.logger.info(f"Running schema command: {schema_cmd}")
+                await self.run_command(schema_cmd)
             except Exception as e:
                 self.logger.error(f"Database operation failed: {e}")
                 try:
