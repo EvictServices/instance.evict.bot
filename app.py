@@ -230,10 +230,10 @@ class InstanceManager:
                 )
 
                 self.logger.info("Verifying database creation")
-                db_exists = await self.run_command(
-                    f"docker exec -i setup-postgres-1 psql -U admin -lqt | cut -d \| -f 1 | grep -w {bot_name} || true"
-                )
-                if not db_exists:
+                verify_cmd = f"docker exec -i setup-postgres-1 psql -U admin -c \"SELECT datname FROM pg_database WHERE datname = '{bot_name}';\""
+                db_exists = await self.run_command(verify_cmd)
+                
+                if bot_name.lower() not in db_exists.lower():
                     raise Exception(f"Database {bot_name} was not created successfully")
 
                 await asyncio.sleep(1)
