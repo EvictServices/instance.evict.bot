@@ -230,16 +230,16 @@ class InstanceManager:
                 )
 
                 self.logger.info("Verifying database creation")
-                verify_cmd = f"docker exec -i setup-postgres-1 psql -U admin -c \"SELECT datname FROM pg_database WHERE datname = '{bot_name}';\""
+                verify_cmd = f"docker exec -i setup-postgres-1 psql -U admin -c \"SELECT datname FROM pg_database WHERE lower(datname) = lower('{bot_name}');\""
                 db_exists = await self.run_command(verify_cmd)
                 
-                if bot_name.lower() not in db_exists.lower():
+                if "datname" not in db_exists:
                     raise Exception(f"Database {bot_name} was not created successfully")
 
                 await asyncio.sleep(1)
 
                 self.logger.info("Applying database schema")
-                schema_cmd = f"cat /root/setup/schema_backup.sql | docker exec -i setup-postgres-1 psql -U admin -d {bot_name}"
+                schema_cmd = f"cat /root/setup/schema_backup.sql | docker exec -i setup-postgres-1 psql -U admin -d {bot_name.lower()}"
                 self.logger.info(f"Running schema command: {schema_cmd}")
                 await self.run_command(schema_cmd)
             except Exception as e:
