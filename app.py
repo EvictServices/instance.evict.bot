@@ -224,7 +224,7 @@ class InstanceManager:
             self.logger.info(f"Creating database: {bot_name}")
             try:
                 await self.run_command(
-                    f"docker exec -i setup-postgres-1 psql -U admin -c 'CREATE DATABASE {bot_name};'"
+                    f"docker exec -i setup-postgres-1 psql -h localhost -p 5432 -U admin -c 'CREATE DATABASE {bot_name};'"
                 )
             except Exception as e:
                 self.logger.error(f"Database creation failed: {e}")
@@ -243,9 +243,11 @@ class InstanceManager:
                     self.logger.error(f"Could not check database status: {check_e}")
                 raise
 
+            await asyncio.sleep(1) 
+
             self.logger.info("Applying database schema")
             await self.run_command(
-                f"docker exec -i setup-postgres-1 psql -U admin -d {bot_name} < /root/setup/schema.sql"
+                f"PGPASSWORD='0J9RLTUDWMRl3IrdAE3as8' docker exec -i setup-postgres-1 psql -h localhost -p 5432 -U admin -d {bot_name} < /root/setup/schema_backup.sql"
             )
 
             self.logger.info("Installing Playwright dependencies")
