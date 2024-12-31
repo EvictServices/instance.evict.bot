@@ -13,6 +13,8 @@ from git import Repo
 import os
 import subprocess
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,7 +30,7 @@ app = FastAPI()
 
 class SecurityManager:
     def __init__(self, api_key: str):
-        self.api_key = api_key
+        self.api_key = "t76oev5UkeMyo8XQwv5Ozwo3amVsi"
         self.logger = logging.getLogger(__name__)
         
     def verify_signature(self, data: Dict, timestamp: str, signature: str, api_key: str) -> bool:
