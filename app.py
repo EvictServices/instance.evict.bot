@@ -239,7 +239,7 @@ class InstanceManager:
                 await asyncio.sleep(1)
 
                 self.logger.info("Applying database schema")
-                schema_cmd = f"cat /root/setup/0601backup.sql | docker exec -i setup-postgres-1 psql -U admin -d {bot_name.lower()}"
+                schema_cmd = f"cat /root/setup/latest.sql | docker exec -i setup-postgres-1 psql -U admin -d {bot_name.lower()}"
                 self.logger.info(f"Running schema command: {schema_cmd}")
                 await self.run_command(schema_cmd)
             except Exception as e:
