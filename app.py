@@ -1,18 +1,21 @@
-from fastapi import FastAPI, HTTPException, Header, Request, Depends
-from fastapi.responses import JSONResponse
 import hmac
 import hashlib
 import logging
-from datetime import datetime
-from typing import Dict
+import uvicorn
 import asyncio
-from pathlib import Path
 import shutil
 import docker
-from git import Repo
 import os
 import subprocess
 import json
+
+from fastapi import FastAPI, HTTPException, Header, Request, Depends
+from fastapi.responses import JSONResponse
+
+from git import Repo
+from pathlib import Path
+from datetime import datetime
+from typing import Dict
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -493,6 +496,5 @@ async def list_instances(
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    import uvicorn
     logger.info("Starting server")
     uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
